@@ -22,7 +22,7 @@ func CreateUser(c echo.Context) error {
 
 func HandleUpdateUser(c echo.Context) error {
 	id := c.Param("id")
-	fmt.Println(id)
+	fmt.Printf("id: %#v\n", id)
 
 	idInt, err := strconv.Atoi(id)
 	if err != nil {

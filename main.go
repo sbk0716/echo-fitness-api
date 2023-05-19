@@ -10,10 +10,13 @@ import (
 
 func main() {
 	e := echo.New()
-	e.GET("/", handlers.Home)
+	e.GET("/", handlers.Root)
 	storage.InitDB()
-
-	// e.Use(handlers.LogRequest)
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+	e.Use(handlers.LogRequest)
 	e.Use(middleware.Logger(), middleware.Recover())
 
 	e.POST("/users", handlers.CreateUser)
