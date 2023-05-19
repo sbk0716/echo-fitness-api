@@ -20,10 +20,10 @@ func CreateMeasurement(measurement models.Measurements) (models.Measurements, er
 func UpdateMeasurement(measurement models.Measurements, id int) (models.Measurements, error) {
 	db := storage.GetDB()
 	sqlStatement := `
-	  UPDATE private.measurements
-	  SET weight = $2, height = $3, body_fat = $4, created_at = $5
-	  WHERE id = $1
-	  RETURNING id`
+		UPDATE private.measurements
+		SET weight = $2, height = $3, body_fat = $4, created_at = $5
+		WHERE id = $1
+		RETURNING id`
 	err := db.QueryRow(sqlStatement, id, measurement.Weight, measurement.Height, measurement.BodyFat, time.Now()).Scan(&id)
 	if err != nil {
 		return models.Measurements{}, err

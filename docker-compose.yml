@@ -10,10 +10,7 @@ services:
     volumes:
       - db-store:/var/lib/postgresql/data
       - ./postgres/init:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: "super-user"
-      POSTGRES_PASSWORD: "dummyPass"
-      POSTGRES_DB: "fitness_app"
+    env_file: .env.local
   fitness_api:
     container_name: fitness_api
     build:
@@ -23,7 +20,6 @@ services:
       - 8080:8080
     depends_on:
       - fitness_pg
-    environment:
-      GO_ENV: "local"
+    env_file: .env.local
 volumes:
   db-store:

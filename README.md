@@ -6,6 +6,8 @@
 
 ### User Story
 * Create a user with a username and password.
+* Create a measurement with user_id, weight and body_fat.
+
 
 
 ## (2)Project Structure
@@ -73,8 +75,20 @@ fitness_app=# \l
            |            |          |            |            | "super-user"=CTc/"super-user"
 (4 rows)
 
-fitness_app=# SET search_path = private;
+fitness_app=# show search_path;
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+fitness_app=# SET search_path = "$user", public, private;
 SET
+fitness_app=# show search_path;
+       search_path        
+--------------------------
+ "$user", public, private
+(1 row)
+
 fitness_app=# \dt;
               List of relations
  Schema  |     Name     | Type  |   Owner    
@@ -83,7 +97,6 @@ fitness_app=# \dt;
  private | users        | table | super-user
 (2 rows)
 
-fitness_app=# 
 fitness_app=# \q
 root@1a4b66aaadc4:/# exit
 exit
@@ -164,17 +177,55 @@ fitness_api  | ⇨ http server started on [::]:8080
 * Create a user with a username and password.
 
 ```sh
-curl -s -H "Content-Type: application/json" \
+% curl -s -H "Content-Type: application/json" \
     -X POST \
-    -d '{"name": "test03","email": "test03@mail.com","password": "password"}' \ 
+    -d '{"name": "test user","email": "test_user@mail.com","password": "1234567fjoafhouf"}' \
     http://localhost:8080/users | jq -r '.'
 {
-  "id": 3,
-  "name": "test03",
-  "email": "test03@mail.com",
+  "id": 7,
+  "name": "test user",
+  "email": "test_user@mail.com",
+  "password": "1234567fjoafhouf",
+  "created_at": "2023-05-20T06:53:42.079452Z",
+  "updated_at": "2023-05-20T06:53:42.079452Z"
+}
+%
+```
+
+## 3.2. `POST /measurements`
+* Create a measurement with user_id, weight and body_fat.
+
+```sh
+% curl -s -H "Content-Type: application/json" \
+    -X POST \
+    -d '{"user_id": 1,"weight": 80,"height": 180,"body_fat": 20}' \
+    http://localhost:8080/measurements | jq -r '.'
+{
+  "id": 1,
+  "user_id": 1,
+  "weight": 80,
+  "height": 180,
+  "body_fat": 20,
+  "created_at": "0001-01-01T00:00:00Z"
+}
+% 
+```
+
+
+## 3.3. `PUT /users`
+* Update a user with a username and password.
+
+```sh
+% curl -s -H "Content-Type: application/json" \
+    -X PUT \ 
+    -d '{"name": "updated test01","email": "test01@mail.com","password": "password"}' \
+    http://localhost:8080/user/1 | jq -r '.'
+{
+  "id": 1,
+  "name": "updated test01",
+  "email": "test01@mail.com",
   "password": "password",
   "created_at": "0001-01-01T00:00:00Z",
   "updated_at": "0001-01-01T00:00:00Z"
 }
-%
 ```

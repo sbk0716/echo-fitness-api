@@ -13,10 +13,6 @@ import (
 var db *sql.DB
 
 func InitDB() {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
 	const targetEnvName = "GO_ENV"
 	if "" == os.Getenv(targetEnvName) {
 		_ = os.Setenv(targetEnvName, "local")
