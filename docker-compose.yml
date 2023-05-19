@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  fitness_pg:
+    image: postgres:14
+    container_name: fitness_pg
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: "super-user"
+      POSTGRES_PASSWORD: "dummyPass"
+      POSTGRES_DB: "fitness_app"
+  fitness_api:
+    container_name: fitness_api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - fitness_pg
+    environment:
+      GO_ENV: "local"
+volumes:
+  db-store:
