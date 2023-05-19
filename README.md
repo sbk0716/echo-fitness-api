@@ -6,7 +6,9 @@
 
 ### User Story
 * Create a user with a username and password.
-* Create a measurement with user_id, weight and body_fat.
+* Create a measurement with user_id, weight, height and body_fat.
+* Update a user with a username and password.
+* Update a measurement with weight, height and body_fat.
 
 
 
@@ -32,10 +34,6 @@
 │       └── db.go
 ├── docker-compose.production.yml
 ├── docker-compose.yml
-├── docs
-│   ├── docs.go
-│   ├── swagger.json
-│   └── swagger.yaml
 ├── go.mod
 ├── go.sum
 ├── main.go
@@ -193,7 +191,7 @@ fitness_api  | ⇨ http server started on [::]:8080
 ```
 
 ## 3.2. `POST /measurements`
-* Create a measurement with user_id, weight and body_fat.
+* Create a measurement with user_id, weight, height and body_fat.
 
 ```sh
 % curl -s -H "Content-Type: application/json" \
@@ -201,23 +199,22 @@ fitness_api  | ⇨ http server started on [::]:8080
     -d '{"user_id": 1,"weight": 80,"height": 180,"body_fat": 20}' \
     http://localhost:8080/measurements | jq -r '.'
 {
-  "id": 1,
+  "id": 2,
   "user_id": 1,
   "weight": 80,
   "height": 180,
   "body_fat": 20,
-  "created_at": "0001-01-01T00:00:00Z"
+  "created_at": "2023-05-20T07:05:25.765603Z"
 }
 % 
 ```
 
-
-## 3.3. `PUT /users`
+## 3.3. `PUT /user/:id`
 * Update a user with a username and password.
 
 ```sh
 % curl -s -H "Content-Type: application/json" \
-    -X PUT \ 
+    -X PUT \
     -d '{"name": "updated test01","email": "test01@mail.com","password": "password"}' \
     http://localhost:8080/user/1 | jq -r '.'
 {
@@ -225,7 +222,27 @@ fitness_api  | ⇨ http server started on [::]:8080
   "name": "updated test01",
   "email": "test01@mail.com",
   "password": "password",
-  "created_at": "0001-01-01T00:00:00Z",
-  "updated_at": "0001-01-01T00:00:00Z"
+  "created_at": "2023-05-19T20:55:22.833639Z",
+  "updated_at": "2023-05-20T07:07:56.940342Z"
 }
+% 
+```
+
+## 3.4. `PUT /measurement/:id`
+* Update a measurement with weight, height and body_fat.
+
+```sh
+% curl -s -H "Content-Type: application/json" \
+    -X PUT \
+    -d '{"weight": 71,"height": 181,"body_fat": 21}' \
+    http://localhost:8080/measurement/1 | jq -r '.'
+{
+  "id": 1,
+  "user_id": 5,
+  "weight": 71,
+  "height": 181,
+  "body_fat": 21,
+  "created_at": "2023-05-20T07:24:20.333367Z"
+}
+% 
 ```
